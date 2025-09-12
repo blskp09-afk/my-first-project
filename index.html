@@ -1,91 +1,52 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Opera</title>
+  <meta charset="UTF-8">
+  <title>Mini Shop</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    input, button { padding: 10px; margin: 5px 0; width: 100%; }
+    #products { margin-top: 15px; }
+    .item { background: #d0ebff; padding: 10px; border-radius: 6px; margin: 5px 0; }
+  </style>
 </head>
 <body>
-    
-  <header>
-    <div>
-        <h3>Закуп</h3>
-        <hr>
-        <table>
-            <ul>
-                <li>Водка</li>
-                <li>Виски</li>
-                <li>Ром</li>
-                <li>Коньяк</li>
-                <li>Коктели</li>
-                <li>Вино</li>
-            </ul>
-        </table>
-    </div>
-  </header>
-  <main>
-      <div class="ma">
+  <h2>Добавить товар</h2>
+  <input type="text" id="productName" placeholder="Название товара">
+  <button onclick="sendProduct()">Добавить</button>
 
-          <div class = "A"></div>
-          <div class = "A"></div>
-          <div class = "A"></div>
-          <div class = "A"></div>
-          <div class = "A"></div>
-          <div class = "A"></div>
-          <div class = "A"></div>
+  <h2>Список товаров</h2>
+  <div id="products"></div>
 
+  <script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();
 
-      </div>
+    function sendProduct() {
+      let name = document.getElementById("productName").value.trim();
+      if (name) {
+        tg.sendData(name);
+        document.getElementById("productName").value = "";
+      }
+    }
 
-  </main>
-  <footer>
+    // При получении ответа от бота (список товаров)
+    Telegram.WebApp.onEvent("web_app_data", (event) => {
+      let data = JSON.parse(event.data);
+      renderProducts(data.products);
+    });
 
-  </footer>>
-  <style>
-      *{
-          margin: 0;
-          padding: 0;
-      }
-      div {
-          background-color:#dabf40;
-          color: #151414;
-          font-size: 50px;
-
-
-      }
-      hr {
-          border: solid 1px #000;
-      }
-      h3 {
-          text-align: center;
-      }
-      table {
-          text-align: center;
-      }
-      ul{
-          text-align: center;
-          display: flex;
-          gap: 4%;
-          list-style: none;
-      }
-      .ma {
-          background-color: #bbb;
-          border: 2px solid #363328;
-          width: 95%;
-          height: 1500px;
-          margin: 10px auto;
-      }
-      .A {
-          display: inline-block;
-          padding: 140px 140px;
-          margin: 10px;
-          border: 1px solid green;
-      }
-  </style>
-    <script>
-        let a = 'Hi';
-        alert(a);
-    </script>
+    function renderProducts(products) {
+      let container = document.getElementById("products");
+      container.innerHTML = "";
+      products.forEach(p => {
+        let div = document.createElement("div");
+        div.className = "item";
+        div.innerText = p.name;
+        container.appendChild(div);
+      });
+    }
+  </script>
 </body>
-
 </html>
-
