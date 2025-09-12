@@ -44,24 +44,24 @@
     let tg = window.Telegram.WebApp;
     tg.expand(); // fullscreen
 
-    // Запрашиваем список товаров при открытии
+    // Загружаем товары при старте
     tg.sendData("__get_products__");
 
     function sendProduct() {
       let name = document.getElementById("productName").value.trim();
       if (name) {
-        tg.sendData(name); // отправляем товар боту
+        tg.sendData(name); // отправляем товар
         document.getElementById("productName").value = "";
       }
     }
 
-    // Слушаем ответы от бота
-    Telegram.WebApp.onEvent("message", (msg) => {
+    // Получаем данные от бота через WebAppQueryResult
+    Telegram.WebApp.onEvent("web_app_query_result", (result) => {
       try {
-        let data = JSON.parse(msg.text);
+        let data = JSON.parse(result.result);
         renderProducts(data.products);
       } catch (e) {
-        console.error("Ошибка парсинга:", e, msg.text);
+        console.error("Ошибка парсинга:", e, result);
       }
     });
 
