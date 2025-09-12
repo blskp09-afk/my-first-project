@@ -5,10 +5,31 @@
   <title>Mini Shop</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    input, button { padding: 10px; margin: 5px 0; width: 100%; }
-    #products { margin-top: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .item { background: #d0ebff; padding: 15px; border-radius: 6px; text-align: center; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+      margin: 0;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+    #products {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .item {
+      background: #d0ebff;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -21,12 +42,12 @@
 
   <script>
     let tg = window.Telegram.WebApp;
-    tg.expand();
+    tg.expand(); // ⚡ делаем fullscreen
 
     function sendProduct() {
       let name = document.getElementById("productName").value.trim();
       if (name) {
-        tg.sendData(name);
+        tg.sendData(name); // отправляем данные боту
         document.getElementById("productName").value = "";
       }
     }
@@ -34,7 +55,7 @@
     // ⚡ слушаем ответы от бота
     Telegram.WebApp.onEvent("message", (msg) => {
       try {
-        let data = JSON.parse(msg.text.replace(/'/g, '"')); // парсим JSON
+        let data = JSON.parse(msg.text.replace(/'/g, '"'));
         renderProducts(data.products);
       } catch (e) {
         console.error("Ошибка парсинга:", e, msg.text);
