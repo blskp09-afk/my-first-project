@@ -42,20 +42,23 @@
 
   <script>
     let tg = window.Telegram.WebApp;
-    tg.expand(); // ⚡ делаем fullscreen
+    tg.expand(); // fullscreen
+
+    // Запрашиваем список товаров при открытии
+    tg.sendData("__get_products__");
 
     function sendProduct() {
       let name = document.getElementById("productName").value.trim();
       if (name) {
-        tg.sendData(name); // отправляем данные боту
+        tg.sendData(name); // отправляем товар боту
         document.getElementById("productName").value = "";
       }
     }
 
-    // ⚡ слушаем ответы от бота
+    // Слушаем ответы от бота
     Telegram.WebApp.onEvent("message", (msg) => {
       try {
-        let data = JSON.parse(msg.text.replace(/'/g, '"'));
+        let data = JSON.parse(msg.text);
         renderProducts(data.products);
       } catch (e) {
         console.error("Ошибка парсинга:", e, msg.text);
