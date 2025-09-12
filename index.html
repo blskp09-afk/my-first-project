@@ -7,8 +7,8 @@
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
     input, button { padding: 10px; margin: 5px 0; width: 100%; }
-    #products { margin-top: 15px; }
-    .item { background: #d0ebff; padding: 10px; border-radius: 6px; margin: 5px 0; }
+    #products { margin-top: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .item { background: #d0ebff; padding: 15px; border-radius: 6px; text-align: center; }
   </style>
 </head>
 <body>
@@ -31,10 +31,14 @@
       }
     }
 
-    // При получении ответа от бота (список товаров)
-    Telegram.WebApp.onEvent("web_app_data", (event) => {
-      let data = JSON.parse(event.data);
-      renderProducts(data.products);
+    // ⚡ слушаем ответы от бота
+    Telegram.WebApp.onEvent("message", (msg) => {
+      try {
+        let data = JSON.parse(msg.text.replace(/'/g, '"')); // парсим JSON
+        renderProducts(data.products);
+      } catch (e) {
+        console.error("Ошибка парсинга:", e, msg.text);
+      }
     });
 
     function renderProducts(products) {
